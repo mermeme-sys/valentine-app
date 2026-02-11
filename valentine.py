@@ -1,11 +1,10 @@
 import streamlit as st
 import time
-import random
 
 # Page configuration
 st.set_page_config(page_title="A Message For You", page_icon="🤍")
 
-# Custom CSS for the Blue and Yellow theme and animations
+# Custom CSS
 st.markdown("""
     <style>
     .stApp {
@@ -15,6 +14,18 @@ st.markdown("""
         color: #ff4b4b;
         font-size: 100px;
         text-align: center;
+    }
+    .big-x {
+        color: #d32f2f;
+        font-size: 150px;
+        text-align: center;
+        font-weight: bold;
+        animation: pulse 0.5s infinite;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
     }
     .big-text {
         font-family: 'Helvetica';
@@ -40,14 +51,22 @@ if 'step' not in st.session_state:
 # --- STEP 1: INITIAL QUESTION ---
 if st.session_state.step == 'start':
     st.markdown("<h1 class='big-text'>I have a question for you...</h1>", unsafe_allow_html=True)
+    
     col1, col2 = st.columns(2)
+    
     with col1:
         if st.button("Accept", use_container_width=True):
             st.session_state.step = 'ask'
             st.rerun()
+            
     with col2:
         if st.button("Decline", use_container_width=True):
+            # Show the big X
+            st.markdown("<div class='big-x'>❌</div>", unsafe_allow_html=True)
             st.error("Wrong answer! Try again. 😉")
+            # Brief pause so they see the X before the page refreshes/updates
+            time.sleep(1.5)
+            st.rerun()
 
 # --- STEP 2: THE PROPOSAL ---
 elif st.session_state.step == 'ask':
@@ -58,18 +77,18 @@ elif st.session_state.step == 'ask':
             st.session_state.step = 'final'
             st.rerun()
     with col2:
+        # Both buttons are 'Yes' anyway, sneaky!
         if st.button("Yes", key="yes2", use_container_width=True):
             st.session_state.step = 'final'
             st.rerun()
 
 # --- STEP 3: THE CELEBRATION ---
 elif st.session_state.step == 'final':
-    st.balloons() # Built-in Streamlit balloon animation
-    
+    st.balloons()
     st.markdown("<div class='heart'>❤️</div>", unsafe_allow_html=True)
     st.markdown("<h1 style='text-align: center; color: #ff1493;'>YAYYYY!!!!</h1>", unsafe_allow_html=True)
     
-    # The Letter
+     # The Letter
     st.markdown(f"""
     <div class='letter-box'>
         <strong>To my favorite person, Happy Valentine’s Day, my love 🤍</strong><br><br>
